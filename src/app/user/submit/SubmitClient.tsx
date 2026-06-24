@@ -24,9 +24,14 @@ export default function SubmitClient() {
     setSubmitting(true);
 
      const links = link
-    .split(/[\n\s]+/)
-    .map(l => l.trim())
-    .filter(Boolean);
+  .split(/\r?\n/)
+  .map(l =>
+    l
+      .trim()
+      .replace(/^"+|"+$/g, "") // remove quotes
+      .replace(/\t/g, "")      // remove tabs from Sheets
+  )
+  .filter(Boolean);
 
     try {
       const res = await fetch("/api/user/submit", {
