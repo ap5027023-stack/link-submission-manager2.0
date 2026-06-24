@@ -20,14 +20,19 @@ export default function SubmitClient() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!link.trim()) return;
+    if (!link.split("\n").some(l => l.trim())) return;
     setSubmitting(true);
+
+     const links = link
+    .split(/[\n\s]+/)
+    .map(l => l.trim())
+    .filter(Boolean);
 
     try {
       const res = await fetch("/api/user/submit", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ link: link.trim() }),
+        body: JSON.stringify({ links }),
       });
       const data = await res.json();
 
@@ -111,14 +116,16 @@ export default function SubmitClient() {
             <textarea
               value={link}
               onChange={e => setLink(e.target.value)}
-              rows={12}
-              placeholder="https://example.com/your-link"
+              rows={15}
+              placeholder={`https://site1.com
+                https://site2.com
+                https://site3.com`}
               className="input-field font-mono text-sm w-full"
               disabled={isLimitReached || submitting}
               required
             />
             <p className="text-xs text-surface-400 mt-1.5">
-              Must be a valid URL with http:// or https://
+              Paste one URL per line. Maximum 100 links at once.
             </p>
           </div>
 
