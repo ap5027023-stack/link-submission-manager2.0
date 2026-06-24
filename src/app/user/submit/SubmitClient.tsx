@@ -33,6 +33,8 @@ export default function SubmitClient() {
   )
   .filter(Boolean);
 
+console.log("LINKS ARRAY:", links);
+    
     try {
       const res = await fetch("/api/user/submit", {
         method: "POST",
